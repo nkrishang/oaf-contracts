@@ -19,7 +19,9 @@ pragma solidity ^0.8.13;
  *
  *              - If Alice hasn't executed the escrow within the time that Bob expects, let Bob withdraw the ether stored in the contract.
  *
- *            [2] Since Alice and Bob don't trust each other, they want to make sure that the smart contract
+ *            [2] Create a file `src/test/Escrow.t.sol` and write test cases for the Escrow smart contract.
+ *
+ *            [3] Since Alice and Bob don't trust each other, they want to make sure that the smart contract
  *                is not malicious. So -- deploy the smart contract to the Goerli blockchain and verify it.
  *
  *  HINT: You can use the IERC20 contract to represent the A-Tokens.
