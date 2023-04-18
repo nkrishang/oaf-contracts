@@ -4,8 +4,10 @@ pragma solidity ^0.8.13;
 import "./IERC20.sol";
 
 /**
- *  Exercise: Write a smart contract that implements the ERC-20 standard.
- *            The contract should create an initial supply of 1_000_000 tokens at contract creation.
+ *  Exercise: [1] Write a smart contract that implements the ERC-20 standard.
+ *            [2] Create a file `src/test/Token.t.sol` and write test cases for your ERC-20 smart contract.
+ *                Look at the test case for exercise-1 as reference.
+ *                
 **/
 
 contract Token is IERC20 {

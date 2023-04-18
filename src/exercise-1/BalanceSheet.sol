@@ -8,6 +8,4 @@ pragma solidity ^0.8.13;
  *      3. Allows an address to transfer its balance to another address.
 **/
 
-contract BalanceSheet {
-    constructor() {}
-}
+contract BalanceSheet {}
