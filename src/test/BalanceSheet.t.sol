@@ -2,7 +2,7 @@
 pragma solidity ^0.8.13;
 
 import "lib/forge-std/src/Test.sol";
-import "src/exercise-1/BalanceSheet.sol";
+import "src/exercise-1/solution/BalanceSheet.sol";
 
 contract BalanceSheetTest is Test {
     

@@ -8,23 +8,4 @@ pragma solidity ^0.8.13;
  *      3. Allows an address to transfer its balance to another address.
 **/
 
-contract BalanceSheet {
-    
-    // ========== State ==========
-
-    mapping(address => uint256) public balance;
-    
-    // ========== Constructor ==========
-
-    constructor(uint256 initialBalance) {
-        balance[msg.sender] = initialBalance;
-    }
-
-    // ========== External functions  ==========
-
-    function transfer(address to, uint256 amount) external {
-        require(balance[msg.sender] >= amount, "Insufficient balance");
-        balance[msg.sender] -= amount;
-        balance[to] += amount;
-    }
-}
+contract BalanceSheet {}
