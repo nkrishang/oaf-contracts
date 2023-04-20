@@ -27,7 +27,7 @@ pragma solidity ^0.8.13;
  *  HINT: You can use the IERC20 contract to represent the A-Tokens.
 **/
 
-import "./IERC20.sol";
+import "oaf-contracts/src/exercise-2/IERC20.sol";
 
 contract Escrow {
     address payable public bob;
@@ -56,8 +56,8 @@ contract Escrow {
         bool success = token.transferFrom(alice, address(this), amount);
         require(success, "Token transfer failed");
         
-        executed = true;
         bob.transfer(address(this).balance);
+        executed = true;
     }
     
     function withdraw() external {
@@ -65,7 +65,7 @@ contract Escrow {
         require(block.timestamp >= deadline, "The deadline has not yet been reached");
         require(!executed, "The escrow has already been executed");
         
-        executed = true;
         bob.transfer(address(this).balance);
+        executed = true;
     }
 }
