@@ -27,4 +27,45 @@ pragma solidity ^0.8.13;
  *  HINT: You can use the IERC20 contract to represent the A-Tokens.
 **/
 
-contract Escrow {}
+import "./IERC20.sol";
+
+contract Escrow {
+    address payable public bob;
+    address public alice;
+    IERC20 public token;
+    uint public amount;
+    uint public deadline;
+    bool public executed;
+    
+    constructor(address _bob, address _alice, address _token, uint _amount, uint _deadline) {
+        bob = payable(_bob);
+        alice = _alice;
+        token = IERC20(_token);
+        amount = _amount;
+        deadline = _deadline;
+        executed = false;
+    }
+    
+    function execute() external {
+        require(msg.sender == alice, "Only Alice can execute the escrow");
+        require(!executed, "The escrow has already been executed");
+        
+        uint balance = token.balanceOf(alice);
+        require(balance >= amount, "Insufficient token balance");
+        
+        bool success = token.transferFrom(alice, address(this), amount);
+        require(success, "Token transfer failed");
+        
+        executed = true;
+        bob.transfer(address(this).balance);
+    }
+    
+    function withdraw() external {
+        require(msg.sender == bob, "Only Bob can withdraw the escrowed ether");
+        require(block.timestamp >= deadline, "The deadline has not yet been reached");
+        require(!executed, "The escrow has already been executed");
+        
+        executed = true;
+        bob.transfer(address(this).balance);
+    }
+}
