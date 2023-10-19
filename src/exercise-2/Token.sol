@@ -11,5 +11,85 @@ import "./IERC20.sol";
 **/
 
 contract Token is IERC20 {
-    constructor() {}
+    mapping(address => uint256) sheet;
+    uint256 token_supply;
+    mapping(address => mapping(address=> uint256)) allowances;
+
+    function totalSupply() external view returns (uint256) {
+        return token_supply;
+    }
+
+    /**
+     * @dev Returns the amount of tokens owned by `account`.
+     */
+    function balanceOf(address account) external view returns (uint256) {
+        return sheet[account];
+    }
+
+    /**
+     * @dev Moves `amount` tokens from the caller's account to `to`.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * Emits a {Transfer} event.
+     */
+    function transfer(address to, uint256 amount) external returns (bool) {
+        require(sheet[msg.sender] <= amount, "Transfer: sender trying to transfer more tokens than they have");
+        sheet[msg.sender] -= amount;
+        sheet[to] += amount;
+        emit Transfer(msg.sender, to, amount);
+        return true;
+    }
+
+    /**
+     * @dev Returns the remaining number of tokens that `spender` will be
+     * allowed to spend on behalf of `owner` through {transferFrom}. This is
+     * zero by default.
+     *
+     * This value changes when {approve} or {transferFrom} are called.
+     */
+    function allowance(address owner, address spender) external view returns (uint256) {
+        return allowances[owner][spender];
+    }
+
+    /**
+     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * IMPORTANT: Beware that changing an allowance with this method brings the risk
+     * that someone may use both the old and the new allowance by unfortunate
+     * transaction ordering. One possible solution to mitigate this race
+     * condition is to first reduce the spender's allowance to 0 and set the
+     * desired value afterwards:
+     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
+     *
+     * Emits an {Approval} event.
+     */
+    function approve(address spender, uint256 amount) external returns (bool) {
+        allowances[msg.sender][spender] = amount;
+        emit Approval(msg.sender, spender, amount);
+        return true;
+    }
+
+    /**
+     * @dev Moves `amount` tokens from `from` to `to` using the
+     * allowance mechanism. `amount` is then deducted from the caller's
+     * allowance.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * Emits a {Transfer} event.
+     */
+    function transferFrom(address from, address to, uint256 amount) external returns (bool) {
+        require(sheet[from] <= amount, "TransferFrom: from address does not have enough tokens");
+        require(allowances[from][msg.sender] <= amount, "TransferFrom: caller does not have enough allowance to send on behalf of from");
+
+        sheet[from] -= amount;
+        allowances[from][to] -= amount;
+        sheet[to] += amount;
+        
+        emit Transfer(from, to, amount);
+        return true;
+    }
 }
