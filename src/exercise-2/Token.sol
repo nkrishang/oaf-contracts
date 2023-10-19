@@ -34,11 +34,7 @@ contract Token is IERC20 {
      * Emits a {Transfer} event.
      */
     function transfer(address to, uint256 amount) external returns (bool) {
-        require(sheet[msg.sender] >= amount, "Transfer: sender trying to transfer more tokens than they have");
-        sheet[msg.sender] -= amount;
-        sheet[to] += amount;
-        emit Transfer(msg.sender, to, amount);
-        return true;
+        return _transfer(from, to, amount);
     }
 
     /**
@@ -82,11 +78,18 @@ contract Token is IERC20 {
      * Emits a {Transfer} event.
      */
     function transferFrom(address from, address to, uint256 amount) external returns (bool) {
+        if(msg.sender != from) {
+            require(allowances[from][msg.sender] >= amount, "TransferFrom: caller does not have enough allowance to send on behalf of from");
+            allowances[from][to] -= amount;
+        }
+        
+        return _transfer(from, to, amount);
+    }
+
+    function _transfer(address from, address to, uint256 amount) internal returns (bool) {
         require(sheet[from] >= amount, "TransferFrom: from address does not have enough tokens");
-        require(allowances[from][msg.sender] >= amount, "TransferFrom: caller does not have enough allowance to send on behalf of from");
 
         sheet[from] -= amount;
-        allowances[from][to] -= amount;
         sheet[to] += amount;
         
         emit Transfer(from, to, amount);
